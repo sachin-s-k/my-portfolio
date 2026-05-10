@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Mail, Send, MapPin } from 'lucide-react';
+import toast from 'react-hot-toast';
 
 const Contact: React.FC = () => {
     const [formState, setFormState] = useState({ name: '', email: '', message: '' });
@@ -25,11 +26,11 @@ const Contact: React.FC = () => {
                 mode: 'no-cors',
                 body: formData
             });
-            alert('Message sent successfully!');
+            toast.success('Message sent successfully!');
             setFormState({ name: '', email: '', message: '' });
         } catch (error) {
             console.error('Error submitting form:', error);
-            alert('Something went wrong. Please try again.');
+            toast.error('Something went wrong. Please try again.');
         } finally {
             setIsSubmitting(false);
         }

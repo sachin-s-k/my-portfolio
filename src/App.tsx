@@ -1,4 +1,4 @@
-
+import { Toaster } from 'react-hot-toast';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import Skills from './components/Skills';
@@ -15,6 +15,14 @@ function App() {
             <Services />
             <Projects />
             <Contact />
+
+            <Toaster 
+                position="bottom-right" 
+                toastOptions={{ 
+                    style: { background: '#18181b', color: '#fff', border: '1px solid #27272a' },
+                    success: { iconTheme: { primary: '#fff', secondary: '#18181b' } }
+                }} 
+            />
 
             <footer className="bg-black text-white py-8 text-center border-t border-gray-800">
                 <p className="text-gray-500">
