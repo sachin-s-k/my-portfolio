@@ -4,13 +4,35 @@ import { Mail, Send, MapPin } from 'lucide-react';
 
 const Contact: React.FC = () => {
     const [formState, setFormState] = useState({ name: '', email: '', message: '' });
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        // Handle form submission logic here
-        console.log('Form submitted:', formState);
-        alert('Message sent! (Simulation)');
-        setFormState({ name: '', email: '', message: '' });
+        setIsSubmitting(true);
+
+        const formUrl = 'https://docs.google.com/forms/u/0/d/e/1FAIpQLSc8fWLEQtrnga0R4WY8zqpGuFgspfXgmjTy4Vrg0eVcnQy0Qg/formResponse';
+        const formData = new FormData();
+        
+        // Map our form fields to Google Form entry IDs
+        formData.append('entry.577269734', formState.name);
+        formData.append('entry.641192259', formState.email);
+        formData.append('entry.183843791', formState.message);
+
+        try {
+            // mode: 'no-cors' is required to post to Google Forms from a browser
+            await fetch(formUrl, {
+                method: 'POST',
+                mode: 'no-cors',
+                body: formData
+            });
+            alert('Message sent successfully!');
+            setFormState({ name: '', email: '', message: '' });
+        } catch (error) {
+            console.error('Error submitting form:', error);
+            alert('Something went wrong. Please try again.');
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -106,10 +128,11 @@ const Contact: React.FC = () => {
                             </div>
                             <button
                                 type="submit"
-                                className="w-full bg-white text-black font-medium py-3 rounded-lg hover:bg-gray-200 transition-colors flex items-center justify-center gap-2"
+                                disabled={isSubmitting}
+                                className={`w-full bg-white text-black font-medium py-3 rounded-lg transition-colors flex items-center justify-center gap-2 ${isSubmitting ? 'opacity-70 cursor-not-allowed' : 'hover:bg-gray-200'}`}
                             >
-                                Send Message
-                                <Send className="w-4 h-4" />
+                                {isSubmitting ? 'Sending...' : 'Send Message'}
+                                {!isSubmitting && <Send className="w-4 h-4" />}
                             </button>
                         </form>
                     </motion.div>
